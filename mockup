@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeStartUp - Build Your Idea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        #app {
+            flex-grow: 1;
+        }
+        .font-bangers {
+            font-family: 'Bangers', cursive;
+        }
+        .comic-shadow {
+            box-shadow: 8px 8px 0px #1F2937; /* dark-gray */
+        }
+        .comic-shadow-sm {
+            box-shadow: 4px 4px 0px #1F2937; /* dark-gray */
+        }
+        .btn-hover-effect {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .btn-hover-effect:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #1F2937;
+        }
+         .btn-hover-effect:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #1F2937;
+        }
+        .form-input {
+            border: 2px solid #1F2937;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            transition: box-shadow 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px #a78bfa; /* purple-400 */
+        }
+        .clarity-bar-bg {
+            background-color: #e5e7eb; /* gray-200 */
+        }
+        .clarity-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #374151;
+            border: 2px solid #d1d5db;
+            transition: all 0.2s ease-in-out;
+        }
+        .tool-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #8b5cf6; /* purple-500 */
+            background-color: #faf5ff; /* purple-50 */
+            color: #6d28d9; /* purple-700 */
+        }
+        .tool-btn svg {
+            margin-right: 0.75rem;
+            transition: transform 0.2s ease-in-out;
+        }
+        .tool-btn:hover svg {
+            transform: rotate(-10deg) scale(1.1);
+        }
+        .prd-content h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            letter-spacing: 1px;
+            color: #4c1d95; /* deep purple */
+            margin-bottom: 1rem;
+        }
+        .prd-content h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.25rem;
+            letter-spacing: 1px;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 4px solid #facc15; /* yellow-400 */
+            padding-bottom: 0.25rem;
+        }
+        .prd-content h3 {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .prd-content p, .prd-content li {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .prd-content ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+        }
+        #chatbot-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        #chatbot-toggle {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px;
+            background-color: #8b5cf6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #chatbot-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+        #chatbot-window {
+            position: absolute;
+            bottom: 5.5rem;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 1rem;
+            border: 4px solid black;
+            box-shadow: 8px 8px 0px #1F2937;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.5) translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: bottom right;
+        }
+        #chatbot-window.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <!-- App Container -->
+    <div id="app">
+
+        <!-- Homepage Section -->
+        <div id="page-home">
+            <!-- Header -->
+            <header class="bg-white border-b-4 border-black">
+                <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <div class="text-4xl font-bangers text-purple-600 tracking-wider">
+                        <a href="#" class="nav-link" data-target="page-home">VibeStartUp</a>
+                    </div>
+                    <nav class="flex items-center space-x-4">
+                        <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-marketplace">Marketplace</a>
+                        <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-login">Log In</a>
+                        <a href="#" class="nav-link bg-yellow-400 text-black font-bold py-2 px-5 border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm" data-target="page-signup">
+                            Sign Up
+                        </a>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="container mx-auto px-6 py-16 md:py-24 text-center">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Comic-style container -->
+                    <div class="bg-white p-8 md:p-12 border-4 border-black rounded-xl comic-shadow">
+                        <h1 class="text-5xl md:text-7xl font-bangers text-purple-600 tracking-wide leading-none">
+                            Your Next Big Idea Starts With A Vibe.
+                        </h1>
+                        <p class="mt-6 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
+                            Stop just dreaming. Start building. VibeStartUp is your creative co-pilot, turning your raw ideas into real startup plans through an interactive chat experience. It's simple, fun, and powerful.
+                        </p>
+                        <div class="mt-10">
+                            <a href="#" class="nav-link bg-purple-600 text-white font-bold py-4 px-10 text-xl border-2 border-black rounded-lg inline-block btn-hover-effect comic-shadow-sm" data-target="page-signup">
+                                Start Building for Free
+                            </a>
+                        </div>
+                         <p class="mt-4 text-sm text-gray-500">No credit card required. Ever.</p>
+                    </div>
+                </div>
+            </main>
+
+            <!-- How it works section -->
+            <section class="bg-yellow-400 py-16 md:py-20 border-t-4 border-b-4 border-black">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-4xl md:text-5xl font-bangers text-center text-black tracking-wide">How It Works</h2>
+                    <div class="mt-12 grid md:grid-cols-3 gap-8 md:gap-12 text-center">
+                        <!-- Step 1 -->
+                        <div class="bg-white p-6 border-2 border-black rounded-lg comic-shadow-sm">
+                            <div class="text-5xl font-bangers text-purple-600">1</div>
+                            <h3 class="text-2xl font-bold mt-4">Chat Your Idea</h3>
+                            <p class="mt-2 text-gray-600">Just start talking. Tell our AI your vision, your goals, and your wildest dreams. No fancy business plans needed.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="bg-white p-6 border-2 border-black rounded-lg comic-shadow-sm">
+                            <div class="text-5xl font-bangers text-purple-600">2</div>
+                            <h3 class="text-2xl font-bold mt-4">Vibe & Refine</h3>
+                            <p class="mt-2 text-gray-600">Our AI asks the right questions, helping you flesh out details, identify challenges, and discover opportunities.</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="bg-white p-6 border-2 border-black rounded-lg comic-shadow-sm">
+                            <div class="text-5xl font-bangers text-purple-600">3</div>
+                            <h3 class="text-2xl font-bold mt-4">Build Your Plan</h3>
+                            <p class="mt-2 text-gray-600">Walk away with a solid foundation: market analysis, user personas, feature lists, and a clear path forward.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page Section -->
+        <div id="page-login" class="hidden">
+             <!-- Header Logo -->
+            <div class="text-center py-8">
+                <a href="#" class="nav-link text-5xl font-bangers text-purple-600 tracking-wider" data-target="page-home">
+                    VibeStartUp
+                </a>
+            </div>
+
+            <!-- Auth Form Container -->
+            <div class="container mx-auto px-6 pb-12">
+                <div class="max-w-md mx-auto">
+                    <div class="bg-white p-8 md:p-10 border-4 border-black rounded-xl comic-shadow">
+                        <h2 class="font-bangers text-4xl text-center tracking-wide text-gray-800">Log In</h2>
+                        <form id="login-form" class="mt-8 space-y-6">
+                            <div>
+                                <label for="login-email" class="font-bold text-lg">Email</label>
+                                <input type="email" id="login-email" name="email" class="form-input w-full mt-2" placeholder="you@awesome.com">
+                            </div>
+                            <div>
+                                <label for="login-password" class="font-bold text-lg">Password</label>
+                                <input type="password" id="login-password" name="password" class="form-input w-full mt-2" placeholder="••••••••">
+                            </div>
+                            <div>
+                                <button type="submit" class="w-full bg-purple-600 text-white font-bold py-3 px-6 text-lg border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm">
+                                    Let's Go!
+                                </button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-6">
+                            <a href="#" class="font-semibold text-purple-600 hover:underline">Forgot Password?</a>
+                        </div>
+                        <p class="text-center mt-4 text-gray-600">
+                            Need an account? <a href="#" class="nav-link font-bold text-purple-600 hover:underline" data-target="page-signup">Sign Up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign Up Page Section -->
+        <div id="page-signup" class="hidden">
+             <!-- Header Logo -->
+            <div class="text-center py-8">
+                <a href="#" class="nav-link text-5xl font-bangers text-purple-600 tracking-wider" data-target="page-home">
+                    VibeStartUp
+                </a>
+            </div>
+
+            <!-- Auth Form Container -->
+            <div class="container mx-auto px-6 pb-12">
+                <div class="max-w-md mx-auto">
+                    <div class="bg-white p-8 md:p-10 border-4 border-black rounded-xl comic-shadow">
+                        <h2 class="font-bangers text-4xl text-center tracking-wide text-gray-800">Sign Up</h2>
+                        <form id="signup-form" class="mt-8 space-y-6">
+                            <div>
+                                <label for="signup-email" class="font-bold text-lg">Email</label>
+                                <input type="email" id="signup-email" name="email" class="form-input w-full mt-2" placeholder="you@awesome.com">
+                            </div>
+                            <div>
+                                <label for="signup-password" class="font-bold text-lg">Password</label>
+                                <input type="password" id="signup-password" name="password" class="form-input w-full mt-2" placeholder="Create a strong password">
+                            </div>
+                             <div>
+                                <label for="confirm-password" class="font-bold text-lg">Confirm Password</label>
+                                <input type="password" id="confirm-password" name="confirm-password" class="form-input w-full mt-2" placeholder="Repeat password">
+                            </div>
+                            <div>
+                                <button type="submit" class="w-full bg-yellow-400 text-black font-bold py-3 px-6 text-lg border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm">
+                                    Create Account
+                                </button>
+                            </div>
+                        </form>
+                         <p class="text-center mt-6 text-gray-600">
+                            Already have an account? <a href="#" class="nav-link font-bold text-purple-600 hover:underline" data-target="page-login">Log In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page Section -->
+        <div id="page-dashboard" class="hidden">
+            <!-- Dashboard Header -->
+            <header class="bg-white border-b-4 border-black">
+                <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <div class="text-4xl font-bangers text-purple-600 tracking-wider">
+                        <a href="#" class="nav-link" data-target="page-home">VibeStartUp</a>
+                    </div>
+                    <nav class="flex items-center space-x-4">
+                        <a href="#" class="nav-link bg-yellow-400 text-black font-bold py-2 px-5 border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm" data-target="page-new-project">New Project</a>
+                        <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-home">Log Out</a>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Dashboard Main Content -->
+            <main class="container mx-auto px-6 py-12">
+                <h1 class="text-5xl font-bangers text-gray-800 tracking-wide">Your Workshop</h1>
+                <p class="mt-2 text-lg text-gray-600">All your brilliant ideas, right where you left them.</p>
+
+                <!-- Projects Grid -->
+                <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    
+                    <!-- Project Card 1 -->
+                    <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow flex flex-col">
+                        <h2 class="text-2xl font-bold">SocialEats</h2>
+                        <p class="text-gray-600 mt-2 flex-grow">A mobile app for discovering restaurants through friends' video reviews.</p>
+                        <div class="mt-6 pt-4 border-t-2 border-gray-200 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-red-500"><path d="M14.5 4.5c3 0 5.5 2.5 5.5 5.5 0 2.3-1.4 4.2-3.3 5.1-.2.1-.3.2-.4.3-.2.2-.3.4-.4.6-.2.4-.1.9.1 1.3.2.5.5 1 .9 1.5.3.4.6.8.9 1.2.2.3.5.5.8.6.3.1.7 0 1-.2.3-.2.5-.5.7-.8.2-.3.4-.6.5-.9.2-.5.3-1 .3-1.5 0-.3-.1-.6-.2-.8-.1-.2-.2-.4-.3-.5-.1-.1-.2-.2-.3-.3-.2-.1-.4-.2-.6-.2-1.3-.5-2.4-1.2-3.3-2.2-1.1-1.1-1.8-2.5-1.8-4 0-3-2.5-5.5-5.5-5.5S3 7.5 3 10.5c0 1.5.7 2.9 1.8 4 .9 1 2 1.7 3.3 2.2.2.1.4.1.6.2.1.1.2.2.3.3.1.1.2.3.3.5.1.2.2.5.2.8 0 .5-.1 1-.3 1.5-.1.3-.3.6-.5.9-.2.3-.4.6-.7.8-.3.2-.7.3-1 .2-.3-.1-.6-.3-.8-.6-.3-.4-.6-.8-.9-1.2-.4-.5-.7-1-.9-1.5-.2-.4-.3-.9-.1-1.3.1-.2.2-.4.4-.6.1-.1.2-.2.4-.3 1.9-.9 3.3-2.8 3.3-5.1 0-3-2.5-5.5-5.5-5.5Z"/></svg>Vibe Score</span>
+                                <span class="font-bold text-lg text-red-500">8.5</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-500"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Market Fit</span>
+                                <div class="flex items-center text-yellow-400"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>Next Step</span>
+                                <span class="font-bold text-purple-600">Define MVP</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t-2 border-dashed border-gray-200 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-green-500"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Valuation</span>
+                                <span class="font-bold text-lg text-green-600">$750K</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-orange-500"><path d="M10.3 3.3c.2-2.3.2-2.3 2.4 0l.2 2.1c.1.8.7 1.4 1.5 1.5l2.1.2c2.3.2 2.3.2 0 2.4l-2.1.2c-.8.1-1.4.7-1.5 1.5l-.2 2.1c-.2 2.3-.2 2.3-2.4 0l-.2-2.1c-.1-.8-.7-1.4-1.5-1.5l-2.1-.2c-2.3-.2-2.3-.2 0-2.4l2.1-.2c.8-.1 1.4-.7 1.5-1.5l.2-2.1Z"/><path d="m21 15-1.3-1.3"/><path d="M3 9l1.3 1.3"/><path d="M18 3l-1.3 1.3"/><path d="M9 21l-1.3-1.3"/><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/></svg>Burn Rate</span>
+                                <span class="font-bold text-lg text-orange-600">$8K/mo</span>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-500"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Funding Goal</span>
+                                <span class="font-bold text-lg text-indigo-600">$250K</span>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link mt-6 w-full text-center bg-purple-600 text-white font-bold py-2 px-4 border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm" data-target="page-project-detail">Open Project</a>
+                    </div>
+
+                    <!-- Project Card 2 -->
+                    <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow flex flex-col">
+                        <h2 class="text-2xl font-bold">CodeCollab</h2>
+                        <p class="text-gray-600 mt-2 flex-grow">A real-time collaborative code editor with built-in AI pair programming.</p>
+                         <div class="mt-6 pt-4 border-t-2 border-gray-200 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-red-500"><path d="M14.5 4.5c3 0 5.5 2.5 5.5 5.5 0 2.3-1.4 4.2-3.3 5.1-.2.1-.3.2-.4.3-.2.2-.3.4-.4.6-.2.4-.1.9.1 1.3.2.5.5 1 .9 1.5.3.4.6.8.9 1.2.2.3.5.5.8.6.3.1.7 0 1-.2.3-.2.5-.5.7-.8.2-.3.4-.6.5-.9.2-.5.3-1 .3-1.5 0-.3-.1-.6-.2-.8-.1-.2-.2-.4-.3-.5-.1-.1-.2-.2-.3-.3-.2-.1-.4-.2-.6-.2-1.3-.5-2.4-1.2-3.3-2.2-1.1-1.1-1.8-2.5-1.8-4 0-3-2.5-5.5-5.5-5.5S3 7.5 3 10.5c0 1.5.7 2.9 1.8 4 .9 1 2 1.7 3.3 2.2.2.1.4.1.6.2.1.1.2.2.3.3.1.1.2.3.3.5.1.2.2.5.2.8 0 .5-.1 1-.3 1.5-.1.3-.3.6-.5.9-.2.3-.4.6-.7.8-.3.2-.7.3-1 .2-.3-.1-.6-.3-.8-.6-.3-.4-.6-.8-.9-1.2-.4-.5-.7-1-.9-1.5-.2-.4-.3-.9-.1-1.3.1-.2.2-.4.4-.6.1-.1.2-.2.4-.3 1.9-.9 3.3-2.8 3.3-5.1 0-3-2.5-5.5-5.5-5.5Z"/></svg>Vibe Score</span>
+                                <span class="font-bold text-lg text-red-500">6.2</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-500"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Market Fit</span>
+                                <div class="flex items-center text-yellow-400"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>Next Step</span>
+                                <span class="font-bold text-purple-600">User Personas</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t-2 border-dashed border-gray-200 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-green-500"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Valuation</span>
+                                <span class="font-bold text-lg text-green-600">$1.2M</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-orange-500"><path d="M10.3 3.3c.2-2.3.2-2.3 2.4 0l.2 2.1c.1.8.7 1.4 1.5 1.5l2.1.2c2.3.2 2.3.2 0 2.4l-2.1.2c-.8.1-1.4.7-1.5 1.5l-.2 2.1c-.2 2.3-.2 2.3-2.4 0l-.2-2.1c-.1-.8-.7-1.4-1.5-1.5l-2.1-.2c-2.3-.2-2.3-.2 0-2.4l2.1-.2c.8-.1 1.4-.7 1.5-1.5l.2-2.1Z"/><path d="m21 15-1.3-1.3"/><path d="M3 9l1.3 1.3"/><path d="M18 3l-1.3 1.3"/><path d="M9 21l-1.3-1.3"/><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/></svg>Burn Rate</span>
+                                <span class="font-bold text-lg text-orange-600">$15K/mo</span>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-500"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Funding Goal</span>
+                                <span class="font-bold text-lg text-indigo-600">$500K</span>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link mt-6 w-full text-center bg-purple-600 text-white font-bold py-2 px-4 border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm" data-target="page-project-detail">Open Project</a>
+                    </div>
+
+                    <!-- Project Card 3 -->
+                    <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow flex flex-col">
+                        <h2 class="text-2xl font-bold">FitFlow</h2>
+                        <p class="text-gray-600 mt-2 flex-grow">AI-powered yoga instructor that personalizes routines based on your mood.</p>
+                         <div class="mt-6 pt-4 border-t-2 border-gray-200 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-red-500"><path d="M14.5 4.5c3 0 5.5 2.5 5.5 5.5 0 2.3-1.4 4.2-3.3 5.1-.2.1-.3.2-.4.3-.2.2-.3.4-.4.6-.2.4-.1.9.1 1.3.2.5.5 1 .9 1.5.3.4.6.8.9 1.2.2.3.5.5.8.6.3.1.7 0 1-.2.3-.2.5-.5.7-.8.2-.3.4-.6.5-.9.2-.5.3-1 .3-1.5 0-.3-.1-.6-.2-.8-.1-.2-.2-.4-.3-.5-.1-.1-.2-.2-.3-.3-.2-.1-.4-.2-.6-.2-1.3-.5-2.4-1.2-3.3-2.2-1.1-1.1-1.8-2.5-1.8-4 0-3-2.5-5.5-5.5-5.5S3 7.5 3 10.5c0 1.5.7 2.9 1.8 4 .9 1 2 1.7 3.3 2.2.2.1.4.1.6.2.1.1.2.2.3.3.1.1.2.3.3.5.1.2.2.5.2.8 0 .5-.1 1-.3 1.5-.1.3-.3.6-.5.9-.2.3-.4.6-.7.8-.3.2-.7.3-1 .2-.3-.1-.6-.3-.8-.6-.3-.4-.6-.8-.9-1.2-.4-.5-.7-1-.9-1.5-.2-.4-.3-.9-.1-1.3.1-.2.2-.4.4-.6.1-.1.2-.2.4-.3 1.9-.9 3.3-2.8 3.3-5.1 0-3-2.5-5.5-5.5-5.5Z"/></svg>Vibe Score</span>
+                                <span class="font-bold text-lg text-red-500">3.1</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-500"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Market Fit</span>
+                                <div class="flex items-center text-yellow-400"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>Next Step</span>
+                                <span class="font-bold text-purple-600">Flesh out Idea</span>
+                            </div>
+                        </div>
+                         <div class="mt-3 pt-3 border-t-2 border-dashed border-gray-200 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-green-500"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Valuation</span>
+                                <span class="font-bold text-lg text-green-600">$200K</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-orange-500"><path d="M10.3 3.3c.2-2.3.2-2.3 2.4 0l.2 2.1c.1.8.7 1.4 1.5 1.5l2.1.2c2.3.2 2.3.2 0 2.4l-2.1.2c-.8.1-1.4.7-1.5 1.5l-.2 2.1c-.2 2.3-.2 2.3-2.4 0l-.2-2.1c-.1-.8-.7-1.4-1.5-1.5l-2.1-.2c-2.3-.2-2.3-.2 0-2.4l2.1-.2c.8-.1 1.4-.7 1.5-1.5l.2-2.1Z"/><path d="m21 15-1.3-1.3"/><path d="M3 9l1.3 1.3"/><path d="M18 3l-1.3 1.3"/><path d="M9 21l-1.3-1.3"/><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/></svg>Burn Rate</span>
+                                <span class="font-bold text-lg text-orange-600">$2K/mo</span>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-500"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Funding Goal</span>
+                                <span class="font-bold text-lg text-indigo-600">$50K</span>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link mt-6 w-full text-center bg-purple-600 text-white font-bold py-2 px-4 border-2 border-black rounded-lg btn-hover-effect comic-shadow-sm" data-target="page-project-detail">Open Project</a>
+                    </div>
+                    
+                    <!-- Add New Project Card -->
+                    <div class="nav-link bg-yellow-200 border-4 border-black rounded-xl border-dashed flex items-center justify-center comic-shadow cursor-pointer hover:bg-yellow-300 transition-colors" data-target="page-new-project">
+                        <div class="text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <p class="font-bold text-xl mt-2 text-black">New Vibe</p>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- New Project Page -->
+        <div id="page-new-project" class="hidden">
+            <!-- Header -->
+            <header class="bg-white border-b-4 border-black">
+                <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <div class="text-4xl font-bangers text-purple-600 tracking-wider">
+                        <a href="#" class="nav-link" data-target="page-home">VibeStartUp</a>
+                    </div>
+                    <nav class="flex items-center space-x-4">
+                        <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-dashboard">Back to Workshop</a>
+                        <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-home">Log Out</a>
+                    </nav>
+                </div>
+            </header>
+            <main class="container mx-auto px-6 py-16 md:py-24 text-center">
+                <div class="max-w-3xl mx-auto">
+                     <div class="bg-white p-8 md:p-12 border-4 border-black rounded-xl comic-shadow">
+                        <h1 class="text-5xl md:text-7xl font-bangers text-purple-600 tracking-wide leading-none">
+                            What's The Vibe?
+                        </h1>
+                        <p class="mt-6 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
+                            Don't overthink it. Just drop your idea below. What problem are you solving? Who is it for? Let's get the conversation started.
+                        </p>
+                        <form id="new-project-form" class="mt-8">
+                            <textarea id="idea-textarea" class="form-input w-full h-40 text-lg p-4" placeholder="e.g., An app that uses AI to create personalized bedtime stories for kids..."></textarea>
+                            <div class="mt-8 flex justify-center items-center space-x-4">
+                                <button type="submit" class="bg-purple-600 text-white font-bold py-4 px-10 text-xl border-2 border-black rounded-lg inline-block btn-hover-effect comic-shadow-sm">
+                                    Start Building
+                                </button>
+                                <button type="button" id="feeling-lucky-btn" class="bg-yellow-400 text-black font-bold py-4 px-10 text-xl border-2 border-black rounded-lg inline-block btn-hover-effect comic-shadow-sm">
+                                    Feeling Lucky?
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Project Detail Page (HQ) -->
+        <div id="page-project-detail" class="hidden">
+             <!-- Header -->
+            <header class="bg-white border-b-4 border-black sticky top-0 z-10">
+                <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <div class="text-4xl font-bangers text-purple-600 tracking-wider">
+                        <a href="#" class="nav-link" data-target="page-home">VibeStartUp</a>
+                    </div>
+                    <nav class="flex items-center space-x-4">
+                         <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-dashboard">Back to Workshop</a>
+                        <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-home">Log Out</a>
+                    </nav>
+                </div>
+            </header>
+            <main class="container mx-auto px-6 py-12">
+                <div class="flex justify-between items-start">
+                    <h1 class="text-5xl font-bangers text-gray-800 tracking-wide">SocialEats HQ</h1>
+                    <div class="text-right">
+                        <span class="text-sm font-bold text-gray-500">VIBE SCORE</span>
+                        <p class="text-5xl font-bangers text-red-500">8.5</p>
+                    </div>
+                </div>
+
+                <!-- Executive Dashboard -->
+                <div class="mt-8 bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                    <h2 class="text-3xl font-bangers tracking-wider text-purple-600">Executive Summary</h2>
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="bg-gray-100 p-4 rounded-lg border-2 border-black">
+                            <p class="font-bold text-gray-600">Runway</p>
+                            <p class="text-3xl font-bold">18 months</p>
+                        </div>
+                        <div class="bg-red-100 p-4 rounded-lg border-2 border-red-500">
+                            <p class="font-bold text-red-800">Top Risk</p>
+                            <p class="text-lg font-bold">Low User Adoption</p>
+                        </div>
+                        <div class="bg-green-100 p-4 rounded-lg border-2 border-green-500">
+                            <p class="font-bold text-green-800">Next Milestone</p>
+                            <p class="text-lg font-bold">Launch MVP (Q3)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offices Grid -->
+                <div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    
+                    <!-- Column 1 -->
+                    <div class="space-y-8">
+                        <!-- CEO Office -->
+                        <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-3xl font-bangers tracking-wider">CEO Office</h2>
+                                <p class="text-2xl font-bangers text-purple-600">70%</p>
+                            </div>
+                             <div class="mt-2">
+                                <p class="font-bold text-sm text-gray-500">CEO CLARITY</p>
+                                <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-black">
+                                    <div class="bg-purple-500 h-full rounded-full" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-3">
+                                <div class="bg-yellow-100 border-2 border-yellow-400 p-3 rounded-lg">
+                                    <p class="font-bold text-yellow-800">Enhance your vision!</p>
+                                    <p class="text-sm">A clearer vision improves AI performance. What does success look like in 5 years?</p>
+                                    <input type="text" class="form-input w-full mt-2 text-sm" placeholder="e.g., Become the #1 food discovery app...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marketing Office (CMO) -->
+                        <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                            <h2 class="text-3xl font-bangers tracking-wider">Marketing (CMO)</h2>
+                            <div class="mt-2">
+                                <p class="font-bold text-sm text-gray-500">CLARITY METER</p>
+                                <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-black">
+                                    <div class="bg-red-500 h-full rounded-full" style="width: 25%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-3">
+                                <p><strong class="font-bold">In Progress:</strong> Generating user personas.</p>
+                                <p><strong class="font-bold text-red-600">Next Suggested Action:</strong> Define top competitor to improve strategy.</p>
+                                <h3 class="font-bold text-lg pt-2 border-t-2 border-dashed">Toolkit</h3>
+                                <div class="space-y-2">
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Generate Social Post</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>Draft Ad Campaign</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>Analyze Competitor SEO</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 1 1 3.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>Brainstorm Blog Topics</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="space-y-8">
+                        <!-- CTO Office -->
+                        <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                            <h2 class="text-3xl font-bangers tracking-wider">Tech (CTO)</h2>
+                            <div class="mt-2">
+                                <p class="font-bold text-sm text-gray-500">CLARITY METER</p>
+                                <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-black">
+                                    <div class="bg-green-500 h-full rounded-full" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-3">
+                                <p><strong class="font-bold">In Progress:</strong> Building video feed algorithm.</p>
+                                <p><strong class="font-bold text-green-600">Next Suggested Action:</strong> None. Tech is on track.</p>
+                                <h3 class="font-bold text-lg pt-2 border-t-2 border-dashed">Toolkit</h3>
+                                <div class="space-y-2">
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>Draft Tech Architecture</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>Generate API Docs</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>Create Unit Tests</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><shield> <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> </shield></svg>Scan for Security</button>
+                                </div>
+                            </div>
+                        </div>
+
+                         <!-- People Office (HR) -->
+                        <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                            <h2 class="text-3xl font-bangers tracking-wider">People (HR)</h2>
+                             <div class="mt-2">
+                                <p class="font-bold text-sm text-gray-500">CLARITY METER</p>
+                                <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-black">
+                                    <div class="bg-yellow-500 h-full rounded-full" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-3">
+                                <p><strong class="font-bold">In Progress:</strong> Defining company culture values.</p>
+                                <p><strong class="font-bold text-yellow-600">Next Suggested Action:</strong> Draft job description for Lead Mobile Dev.</p>
+                                <h3 class="font-bold text-lg pt-2 border-t-2 border-dashed">Toolkit</h3>
+                                <div class="space-y-2">
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>Draft Job Description</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>Create Onboarding Plan</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>Generate Interview Qs</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="space-y-8">
+                         <!-- Investor Relations (CFO) -->
+                        <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                            <h2 class="text-3xl font-bangers tracking-wider">Investors (CFO)</h2>
+                             <div class="mt-2">
+                                <p class="font-bold text-sm text-gray-500">CLARITY METER</p>
+                                <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-black">
+                                    <div class="bg-red-500 h-full rounded-full" style="width: 15%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-3">
+                                <p><strong class="font-bold">In Progress:</strong> Identifying potential angel investors.</p>
+                                <p><strong class="font-bold text-red-600">Next Suggested Action:</strong> What is your total addressable market (TAM)?</p>
+                                <h3 class="font-bold text-lg pt-2 border-t-2 border-dashed">Toolkit</h3>
+                                <div class="space-y-2">
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 15.3"></path></svg>Generate Pitch Deck</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>Create Financial Model</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>Draft Investor Update</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>Investor CRM</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Operations Office (COO) -->
+                        <div class="bg-white p-6 border-4 border-black rounded-xl comic-shadow">
+                            <h2 class="text-3xl font-bangers tracking-wider">Operations (COO)</h2>
+                             <div class="mt-2">
+                                <p class="font-bold text-sm text-gray-500">CLARITY METER</p>
+                                <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-black">
+                                    <div class="bg-green-500 h-full rounded-full" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-3">
+                                <p><strong class="font-bold">In Progress:</strong> Setting up legal incorporation docs.</p>
+                                <p><strong class="font-bold text-green-600">Next Suggested Action:</strong> None. Operations are smooth.</p>
+                                <h3 class="font-bold text-lg pt-2 border-t-2 border-dashed">Toolkit</h3>
+                                <div class="space-y-2">
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>Define OKRs</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>Generate Privacy Policy</button>
+                                    <button class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>Create Project Timeline</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- Documentation Page -->
+        <div id="page-documentation" class="hidden">
+            <header class="bg-white border-b-4 border-black sticky top-0 z-10">
+                <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <div class="text-4xl font-bangers text-purple-600 tracking-wider">
+                        <a href="#" class="nav-link" data-target="page-home">VibeStartUp</a>
+                    </div>
+                    <nav class="flex items-center space-x-4">
+                         <a href="#" class="nav-link text-gray-800 hover:text-purple-600 font-semibold" data-target="page-dashboard">Back to Workshop</a>
+                    </nav>
+                </div>
+            </header>
+            <main class="bg-white">
+                <div class="container mx-auto px-6 py-12 prd-content">
+                    <!-- PRD content will be dynamically injected here by JS -->
+                </div>
+            </main>
+        </div>
+
+    </div>
+    
+    <footer class="bg-gray-800 text-white py-4 mt-auto">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>&copy; 2024 VibeStartUp | 
+                <a href="#" class="nav-link inline-block font-bold text-yellow-400 hover:underline" data-target="page-documentation">Documentation</a> |
+                <a href="#" class="hover:underline">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Global AI Chatbot -->
+    <div id="chatbot-container">
+        <div id="chatbot-window" class="">
+            <div class="p-4 bg-purple-600 text-white border-b-4 border-black">
+                <h3 class="text-2xl font-bangers tracking-wider">VibeBot</h3>
+                <p class="text-sm text-purple-200">Your AI Co-pilot</p>
+            </div>
+            <div class="flex-grow p-4 space-y-4 overflow-y-auto bg-purple-50">
+                <div class="p-3 bg-white rounded-lg border-2 border-black max-w-xs comic-shadow-sm">
+                    <p class="font-semibold">Hey there! I'm VibeBot. Ask me anything about your startup, or tell me what to work on. Try "Draft 3 tweets for SocialEats".</p>
+                </div>
+            </div>
+            <div class="p-4 border-t-4 border-black bg-white">
+                <div class="flex space-x-2">
+                    <input type="text" class="form-input w-full" placeholder="Chat with your AI team...">
+                    <button class="bg-purple-600 text-white p-3 rounded-lg border-2 border-black btn-hover-effect">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button id="chatbot-toggle" class="comic-shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"></path><rect x="4" y="12" width="8" height="8" rx="2"></rect><path d="M8 12v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        // Simple client-side router
+        const pageContainer = document.getElementById('app');
+        const pageLinks = document.querySelectorAll('.nav-link');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const newProjectForm = document.getElementById('new-project-form');
+        const feelingLuckyBtn = document.getElementById('feeling-lucky-btn');
+        const ideaTextarea = document.getElementById('idea-textarea');
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotWindow = document.getElementById('chatbot-window');
+
+        const luckyIdeas = [
+            "A subscription box for rare, international snacks.",
+            "An AI-powered app that creates personalized workout plans based on your available equipment.",
+            "A platform that connects local artists with businesses looking for custom mural paintings.",
+            "A service that uses drones to deliver coffee and pastries to office buildings.",
+            "A marketplace for upcycled and refurbished furniture.",
+            "A mobile game that teaches users how to code in a fun, interactive way.",
+            "A sustainable fashion brand that creates clothing from recycled ocean plastics."
+        ];
+
+        // Function to hide all pages
+        const hideAllPages = () => {
+            const pages = pageContainer.children;
+            for (let page of pages) {
+                page.classList.add('hidden');
+            }
+        };
+
+        // Function to show a specific page
+        const showPage = (pageId) => {
+            hideAllPages();
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                window.scrollTo(0, 0); // Scroll to top on page change
+            }
+        };
+
+        // Add click event listeners to all navigation links
+        pageLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                const targetPageId = link.getAttribute('data-target');
+                showPage(targetPageId);
+            });
+        });
+
+        // Handle login form submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                showPage('page-dashboard');
+            });
+        }
+
+        // Handle sign-up form submission
+        if (signupForm) {
+            signupForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                showPage('page-dashboard');
+            });
+        }
+        
+        // Handle new project form submission
+        if (newProjectForm) {
+            newProjectForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                // In a real app, you would process the idea here
+                showPage('page-project-detail');
+            });
+        }
+
+        // Handle "Feeling Lucky" button click
+        if(feelingLuckyBtn) {
+            feelingLuckyBtn.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * luckyIdeas.length);
+                ideaTextarea.value = luckyIdeas[randomIndex];
+            });
+        }
+        
+        // Handle Chatbot Toggle
+        if(chatbotToggle) {
+            chatbotToggle.addEventListener('click', () => {
+                chatbotWindow.classList.toggle('open');
+            });
+        }
+
+        // Initially show the home page
+        showPage('page-home');
+    </script>
+
+</body>
+</html>
